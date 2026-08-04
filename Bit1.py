@@ -1,17 +1,3 @@
-# ==============================================================================
-# 🏢 FIRMA DE CONSULTORÍA EN INGENIERÍA INDUSTRIAL
-# 🚀 Lanzador Automático de Bitácora Web con Carga de Imágenes y Links
-# ==============================================================================
-
-import os
-import subprocess
-import time
-
-print("⏳ 1/3. Instalando dependencias necesarias...")
-!pip install -q streamlit python-docx
-
-print("\n⚙️ 2/3. Creando la Aplicación Web completa (app.py)...")
-app_code = """
 import streamlit as st
 from docx import Document
 from docx.shared import Inches
@@ -82,7 +68,6 @@ with tab_mercado:
     st.subheader("2. Árbol de Problemas")
     prob_central = st.text_area("Descripción del Problema Central")
     
-    # NUEVO: Links e Imágenes para el Árbol
     st.markdown("🖼️ **Evidencia Visual del Árbol de Problemas**")
     link_arbol = st.text_input("Enlace al Diagrama del Árbol (Miro / Lucidchart / Canva / Figma)")
     img_arbol = st.file_uploader("Cargar pantallazo / imagen del Árbol de Problemas", type=["png", "jpg", "jpeg"], key="img_arbol")
@@ -212,9 +197,7 @@ with tab_general:
         
     objetivo_general = st.text_area("Objetivo General Aprobado")
     
-    # --------------------------------------------------------------------------
     # GENERADOR DE WORD (.DOCX) CON IMÁGENES
-    # --------------------------------------------------------------------------
     if st.button("🚀 Generar Bitácora Completa (.docx)"):
         doc = Document()
         doc.add_heading('FIRMA DE CONSULTORÍA EN INGENIERÍA INDUSTRIAL', 0)
@@ -376,21 +359,3 @@ with tab_general:
             file_name=f"Bitacora_Hito_1_{nombre_formal.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
-"""
-
-with open("app.py", "w") as f:
-    f.write(app_code)
-
-print("\n🚀 3/3. Instalando Cloudflare y lanzando la app...")
-!wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-!dpkg -i cloudflared-linux-amd64.deb > /dev/null 2>&1
-
-subprocess.Popen(["streamlit", "run", "app.py", "--server.port", "8501", "--server.headless", "true", "--browser.gatherUsageStats", "false"])
-time.sleep(3)
-
-print("\n" + "="*80)
-print("🎉 ¡TÚNEL DE CLOUDFLARE LISTO!")
-print("Haz clic en el enlace `.trycloudflare.com` que aparecerá abajo:")
-print("="*80 + "\n")
-
-!cloudflared tunnel --url http://localhost:8501
