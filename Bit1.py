@@ -83,13 +83,13 @@ with tab_mercado:
         st.markdown(f"**Concepto: {c}**")
         col_t1, col_t2, col_t3, col_t4 = st.columns(4)
         with col_t1:
-            st.text_input(f"Definición - {c}", key=f"def_{c}")
+            st.text_area(f"Definición - {c}", key=f"def_{c}")
         with col_t2:
-            st.text_input(f"¿Cómo se usa en la práctica? - {c}", key=f"uso_{c}")
+            st.text_area(f"¿Cómo se usa en la práctica? - {c}", key=f"uso_{c}")
         with col_t3:
-            st.text_input(f"¿Para qué sirve en este caso? - {c}", key=f"para_{c}")
+            st.text_area(f"¿Para qué sirve en este caso? - {c}", key=f"para_{c}")
         with col_t4:
-            st.text_input(f"Fuente - {c}", key=f"src_{c}")
+            st.text_input(f"Fuente - {c}", key=f"src_{c}") # Las fuentes se mantienen en una línea
 
     st.subheader("2. Árbol de Problemas")
     prob_central = st.text_area("Descripción del Problema Central", key="prob_central")
@@ -103,9 +103,9 @@ with tab_mercado:
         st.write(f"*Efecto {i}*")
         col_e1, col_e2, col_e3 = st.columns(3)
         with col_e1:
-            st.text_input(f"Descripción Efecto {i}", key=f"desc_efecto_{i}")
+            st.text_area(f"Descripción Efecto {i}", key=f"desc_efecto_{i}")
         with col_e2:
-            st.text_input(f"Evidencia y dato clave Efecto {i}", key=f"evid_efecto_{i}")
+            st.text_area(f"Evidencia y dato clave Efecto {i}", key=f"evid_efecto_{i}")
         with col_e3:
             st.text_input(f"Fuente Efecto {i}", key=f"src_efecto_{i}")
 
@@ -114,9 +114,9 @@ with tab_mercado:
         st.write(f"*Causa Raíz {i}*")
         col_c1, col_c2, col_c3 = st.columns(3)
         with col_c1:
-            st.text_input(f"Descripción Causa Raíz {i}", key=f"desc_causa_{i}")
+            st.text_area(f"Descripción Causa Raíz {i}", key=f"desc_causa_{i}")
         with col_c2:
-            st.text_input(f"Evidencia y dato clave Causa {i}", key=f"evid_causa_{i}")
+            st.text_area(f"Evidencia y dato clave Causa {i}", key=f"evid_causa_{i}")
         with col_c3:
             st.text_input(f"Fuente Causa Raíz {i}", key=f"src_causa_{i}")
 
@@ -147,19 +147,19 @@ with tab_tecnico:
         st.markdown(f"**Concepto: {c}**")
         col_t1, col_t2, col_t3, col_t4 = st.columns(4)
         with col_t1:
-            st.text_input(f"Definición - {c}", key=f"def_tec_{c}")
+            st.text_area(f"Definición - {c}", key=f"def_tec_{c}")
         with col_t2:
-            st.text_input(f"¿Cómo se usa en la práctica? - {c}", key=f"uso_tec_{c}")
+            st.text_area(f"¿Cómo se usa en la práctica? - {c}", key=f"uso_tec_{c}")
         with col_t3:
-            st.text_input(f"¿Para qué sirve en este caso? - {c}", key=f"para_tec_{c}")
+            st.text_area(f"¿Para qué sirve en este caso? - {c}", key=f"para_tec_{c}")
         with col_t4:
             st.text_input(f"Fuente - {c}", key=f"src_tec_{c}")
 
     st.subheader("2. Definición de las 3 Propuestas de Proyecto Candidatas")
     st.markdown("Describa brevemente cada una de las 3 ideas de proyecto a evaluar:")
-    propuesta_1 = st.text_input("Propuesta 1 (Idea A)", key="propuesta_1")
-    propuesta_2 = st.text_input("Propuesta 2 (Idea B)", key="propuesta_2")
-    propuesta_3 = st.text_input("Propuesta 3 (Idea C)", key="propuesta_3")
+    propuesta_1 = st.text_area("Propuesta 1 (Idea A)", key="propuesta_1")
+    propuesta_2 = st.text_area("Propuesta 2 (Idea B)", key="propuesta_2")
+    propuesta_3 = st.text_area("Propuesta 3 (Idea C)", key="propuesta_3")
 
     st.subheader("3. Criterios de Evaluación y Matriz AHP")
     criterios_val = st.text_area("Criterios de Evaluación (Nombre, Peso % y Justificación)", key="criterios_val", 
@@ -184,11 +184,11 @@ with tab_financiero:
     st.subheader("1. Fundamentación Teórica (Repositorio / Data Room)")
     col_f1, col_f2, col_f3, col_f4 = st.columns(4)
     with col_f1:
-        def_repo = st.text_input("Definición (Repositorio)", key="def_repo")
+        def_repo = st.text_area("Definición (Repositorio)", key="def_repo")
     with col_f2:
-        uso_repo = st.text_input("¿Cómo se usa en la práctica?", key="uso_repo")
+        uso_repo = st.text_area("¿Cómo se usa en la práctica?", key="uso_repo")
     with col_f3:
-        para_repo = st.text_input("¿Para qué sirve en este caso?", key="para_repo")
+        para_repo = st.text_area("¿Para qué sirve en este caso?", key="para_repo")
     with col_f4:
         fuent_repo = st.text_input("Fuente (Repositorio)", key="fuent_repo")
         
@@ -204,7 +204,7 @@ with tab_financiero:
         with col_v1:
             st.selectbox(f"¿Existe? - {item}", ["Sí", "No"], key=f"ex_{item}")
         with col_v2:
-            st.text_input(f"Evidencia de fuentes - {item}", key=f"ev_{item}")
+            st.text_area(f"Evidencia de fuentes - {item}", key=f"ev_{item}")
         with col_v3:
             st.text_input(f"Fuente - {item}", key=f"fu_{item}")
 
