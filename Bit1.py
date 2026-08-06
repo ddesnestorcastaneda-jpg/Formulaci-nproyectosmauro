@@ -33,11 +33,20 @@ st.markdown("### 📌 Bloque 1: Header de Control e Integrantes")
 c1, c2 = st.columns(2)
 with c1:
     integrante_1 = st.text_input("Integrante 1 (Director de Proyectos / General)", key="integrante_1")
+    email_1 = st.text_input("Correo Electrónico Integrante 1", key="email_1")
+    
     integrante_2 = st.text_input("Integrante 2 (Director de Mercado)", key="integrante_2")
+    email_2 = st.text_input("Correo Electrónico Integrante 2", key="email_2")
+    
     grupo = st.text_input("Grupo / Paralelo", key="grupo")
+
 with c2:
     integrante_3 = st.text_input("Integrante 3 (Director Financiero y Riesgos)", key="integrante_3")
+    email_3 = st.text_input("Correo Electrónico Integrante 3", key="email_3")
+    
     integrante_4 = st.text_input("Integrante 4 (Director Técnico y Operaciones)", key="integrante_4")
+    email_4 = st.text_input("Correo Electrónico Integrante 4", key="email_4")
+    
     fecha_modulo = st.text_input("Fecha / Módulo", value="Mercado y Perfil del Proyecto", key="fecha_modulo")
 
 st.markdown("### 🎯 Bloque 2: Matriz de Entregables e Hitos")
@@ -229,14 +238,28 @@ with tab_general:
         # Bloque 1
         doc.add_heading('Bloque 1: Header de Control', level=2)
         t1 = doc.add_table(rows=5, cols=2)
+        
+        name_1 = st.session_state.get("integrante_1", "")
+        mail_1 = st.session_state.get("email_1", "")
         t1.rows[0].cells[0].text = "Director de Proyectos / General"
-        t1.rows[0].cells[1].text = st.session_state.get("integrante_1", "")
+        t1.rows[0].cells[1].text = f"{name_1} ({mail_1})" if mail_1 else name_1
+
+        name_2 = st.session_state.get("integrante_2", "")
+        mail_2 = st.session_state.get("email_2", "")
+        grp_2 = st.session_state.get("grupo", "")
         t1.rows[1].cells[0].text = "Director de Mercado"
-        t1.rows[1].cells[1].text = f"{st.session_state.get('integrante_2', '')} (Grupo: {st.session_state.get('grupo', '')})"
+        t1.rows[1].cells[1].text = f"{name_2} ({mail_2}) - Grupo: {grp_2}" if mail_2 else f"{name_2} (Grupo: {grp_2})"
+
+        name_3 = st.session_state.get("integrante_3", "")
+        mail_3 = st.session_state.get("email_3", "")
         t1.rows[2].cells[0].text = "Director Financiero y Riesgos"
-        t1.rows[2].cells[1].text = st.session_state.get("integrante_3", "")
+        t1.rows[2].cells[1].text = f"{name_3} ({mail_3})" if mail_3 else name_3
+
+        name_4 = st.session_state.get("integrante_4", "")
+        mail_4 = st.session_state.get("email_4", "")
         t1.rows[3].cells[0].text = "Director Técnico y Operaciones"
-        t1.rows[3].cells[1].text = st.session_state.get("integrante_4", "")
+        t1.rows[3].cells[1].text = f"{name_4} ({mail_4})" if mail_4 else name_4
+
         t1.rows[4].cells[0].text = "Fecha / Módulo"
         t1.rows[4].cells[1].text = st.session_state.get("fecha_modulo", "")
         
