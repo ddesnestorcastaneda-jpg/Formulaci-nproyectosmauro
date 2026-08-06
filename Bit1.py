@@ -167,7 +167,7 @@ with tab_tecnico:
     
     st.subheader("4. AI Log & Auditoría de Código")
     prompt_ia = st.text_area("Prompt utilizado para la IA / Script de Python", key="prompt_ia")
-    audit_ia = st.text_area("Auditoría del Ingeniero: ¿Qué error, alucinación o supuesto irreal detectó en la IA y cómo lo corrigió?", key="audit_ia")
+    audit_ia = st.text_area("Auditoría del Ingeniero: ¿Qué error, alucinación o supuesto irreal detectó en la respuesta de la IA y cómo lo corrigió?", key="audit_ia")
     
     st.subheader("5. Selección y Evaluación en Google Colab")
     link_colab = st.text_input("Enlace al Notebook de Colab Ejecutado", key="link_colab")
@@ -242,7 +242,7 @@ with tab_general:
 
     st.markdown("---")
     # ==========================================================================
-    # GENERADOR DE WORD (.DOCX) - FORMATO NARRATIVO Y CONECTADO
+    # GENERADOR DE WORD (.DOCX) - INFORME COMPLETO
     # ==========================================================================
     if st.button("🚀 Generar Bitácora Completa (.docx)"):
         doc = Document()
@@ -252,27 +252,41 @@ with tab_general:
         doc.add_heading('Bitácora N° 01: Identificación de Oportunidades (Gate 0)', level=1)
         
         # ---------------------------------------------------------
-        # BLOQUE 1: HEADER
+        # BLOQUE 1: RESUMEN EJECUTIVO Y DATOS
         # ---------------------------------------------------------
-        doc.add_heading('1. Datos del Equipo', level=2)
+        doc.add_heading('1. Resumen Ejecutivo', level=2)
+        doc.add_paragraph(f"Proyecto Ganador: {st.session_state.get('nombre_formal', 'No definido')}").bold = True
+        doc.add_paragraph(f"Objetivo General: {st.session_state.get('objetivo_general', '')}")
+        doc.add_paragraph(f"Resumen: {st.session_state.get('resumen_proyecto', '')}")
+        
+        doc.add_paragraph("Perfil del Cliente:").bold = True
+        doc.add_paragraph(f"{st.session_state.get('desc_cliente', '')} (Evidencia: {st.session_state.get('evid_cliente', '')} | Fuente: {st.session_state.get('fuent_cliente', '')})")
+
+        doc.add_heading('1.1. Datos del Equipo', level=3)
         p_equipo = doc.add_paragraph()
-        p_equipo.add_run(f"Proyecto / Grupo: {st.session_state.get('grupo', 'No definido')}\n").bold = True
-        p_equipo.add_run(f"Director General: {st.session_state.get('integrante_1', '')}\n")
-        p_equipo.add_run(f"Director de Mercado: {st.session_state.get('integrante_2', '')}\n")
-        p_equipo.add_run(f"Director Financiero: {st.session_state.get('integrante_3', '')}\n")
-        p_equipo.add_run(f"Director Técnico: {st.session_state.get('integrante_4', '')}\n")
+        p_equipo.add_run(f"Grupo / Paralelo: {st.session_state.get('grupo', 'No definido')}\n").bold = True
+        p_equipo.add_run(f"Director General: {st.session_state.get('integrante_1', '')} - {st.session_state.get('email_1', '')}\n")
+        p_equipo.add_run(f"Director de Mercado: {st.session_state.get('integrante_2', '')} - {st.session_state.get('email_2', '')}\n")
+        p_equipo.add_run(f"Director Financiero: {st.session_state.get('integrante_3', '')} - {st.session_state.get('email_3', '')}\n")
+        p_equipo.add_run(f"Director Técnico: {st.session_state.get('integrante_4', '')} - {st.session_state.get('email_4', '')}\n")
         p_equipo.add_run(f"Fecha: {st.session_state.get('fecha_modulo', '')}")
 
+        doc.add_heading('1.2. Estado de Hitos', level=3)
+        doc.add_paragraph(f"Hito 1.1 (Selección Multicriterio): {st.session_state.get('est_hito1', '')} - Comentario: {st.session_state.get('com_hito1', '')}", style='List Bullet')
+        doc.add_paragraph(f"Hito 1.2 (Diagnóstico y Alcance): {st.session_state.get('est_hito2', '')} - Comentario: {st.session_state.get('com_hito2', '')}", style='List Bullet')
+        doc.add_paragraph(f"Hito 1.3 (Factibilidad y Riesgos): {st.session_state.get('est_hito3', '')} - Comentario: {st.session_state.get('com_hito3', '')}", style='List Bullet')
+
         # ---------------------------------------------------------
-        # TABLAS DE MARCO TEÓRICO Y APLICACIÓN
+        # MARCO TEÓRICO UNIFICADO
         # ---------------------------------------------------------
         doc.add_heading('2. Marco Teórico y Aplicación Técnica', level=2)
-        doc.add_paragraph("A continuación, se detalla el sustento teórico de las herramientas utilizadas y su respectiva justificación de aplicación al proyecto.")
+        doc.add_paragraph("Sustento teórico de las herramientas utilizadas (Mercado, Técnico y Financiero) y su justificación de aplicación al proyecto.")
         
-        # Combinamos conceptos de mercado y técnicos para una sola tabla consolidada
+        # Consolidar teoría incluyendo la del Financiero
         conceptos_totales = [
             ("Mercado", conceptos_mercado, "def_", "uso_", "para_", "src_"),
-            ("Técnico", conceptos_tecnico, "def_tec_", "uso_tec_", "para_tec_", "src_tec_")
+            ("Técnico", conceptos_tecnico, "def_tec_", "uso_tec_", "para_tec_", "src_tec_"),
+            ("Financiero", ["Repositorio / Data Room"], "def_repo", "uso_repo", "para_repo", "fuent_repo")
         ]
         
         table_teoria = doc.add_table(rows=1, cols=5)
@@ -281,82 +295,79 @@ with tab_general:
         hdr_cells[0].text = 'Concepto'
         hdr_cells[1].text = 'Definición'
         hdr_cells[2].text = '¿Cómo se usa?'
-        hdr_cells[3].text = '¿Para qué sirve en el proyecto?'
+        hdr_cells[3].text = '¿Para qué sirve?'
         hdr_cells[4].text = 'Fuente'
         
         for area, conceptos, pre_def, pre_uso, pre_para, pre_src in conceptos_totales:
             for c in conceptos:
                 row_cells = table_teoria.add_row().cells
                 row_cells[0].text = c
-                row_cells[1].text = st.session_state.get(f"{pre_def}{c}", "")
-                row_cells[2].text = st.session_state.get(f"{pre_uso}{c}", "")
-                row_cells[3].text = st.session_state.get(f"{pre_para}{c}", "")
-                row_cells[4].text = st.session_state.get(f"{pre_src}{c}", "")
+                
+                # Manejo especial para Financiero que no usa sufijo en el iterador
+                if area == "Financiero":
+                    row_cells[1].text = st.session_state.get("def_repo", "")
+                    row_cells[2].text = st.session_state.get("uso_repo", "")
+                    row_cells[3].text = st.session_state.get("para_repo", "")
+                    row_cells[4].text = st.session_state.get("fuent_repo", "")
+                else:
+                    row_cells[1].text = st.session_state.get(f"{pre_def}{c}", "")
+                    row_cells[2].text = st.session_state.get(f"{pre_uso}{c}", "")
+                    row_cells[3].text = st.session_state.get(f"{pre_para}{c}", "")
+                    row_cells[4].text = st.session_state.get(f"{pre_src}{c}", "")
 
         # ---------------------------------------------------------
-        # DIRECTOR DE MERCADO (Árbol Narrativo)
+        # DIRECTOR DE MERCADO (Árbol y Alcance)
         # ---------------------------------------------------------
-        doc.add_heading('3. Diagnóstico de Mercado y Árbol de Problemas', level=2)
+        doc.add_heading('3. Diagnóstico de Mercado', level=2)
         
-        prob_central = st.session_state.get('prob_central', 'No definido')
-        doc.add_paragraph(f"El problema central identificado para el desarrollo de este proyecto es: {prob_central}.")
+        doc.add_paragraph(f"Problema Central: {st.session_state.get('prob_central', '')}")
         
-        doc.add_paragraph("En la Figura 1 se observa el diagrama del Árbol de Problemas estructurado por la firma de consultoría, donde se relacionan las causas que originan este problema y los efectos que impactan al usuario o mercado.")
+        doc.add_paragraph("En la Figura 1 se observa el diagrama del Árbol de Problemas estructurado por la firma de consultoría.")
         
-        # Inserción de Figura 1 (Si subieron imagen)
         img_arbol = st.session_state.get('img_arbol')
         if img_arbol is not None:
             image_stream = io.BytesIO(img_arbol.getvalue())
             doc.add_picture(image_stream, width=Inches(6.0))
             fig1 = doc.add_paragraph("Figura 1. Diagrama del Árbol de Problemas.")
-            fig1.alignment = 1 # Centro
+            fig1.alignment = 1 
             fig1.runs[0].font.italic = True
-        else:
-            doc.add_paragraph("[El equipo no adjuntó imagen del Árbol de Problemas]", style='Intense Quote')
             
         link_arbol = st.session_state.get('link_arbol', '')
         if link_arbol:
-            doc.add_paragraph(f"Enlace de trabajo interactivo del diagrama: {link_arbol}")
+            doc.add_paragraph(f"Enlace de trabajo interactivo (Miro/Lucidchart): {link_arbol}")
 
-        doc.add_paragraph("A partir del análisis detallado en la figura anterior, las causas del problema detectado son las siguientes:")
+        doc.add_paragraph("Causas del problema detectado:")
         for i in range(1, 4):
             desc_c = st.session_state.get(f"desc_causa_{i}", "")
-            evid_c = st.session_state.get(f"evid_causa_{i}", "")
-            src_c = st.session_state.get(f"src_causa_{i}", "")
             if desc_c:
-                doc.add_paragraph(f"Causa {i}: {desc_c}. (Evidencia: {evid_c} | Fuente: {src_c})", style='List Bullet')
+                doc.add_paragraph(f"Causa {i}: {desc_c}. (Evidencia: {st.session_state.get(f'evid_causa_{i}', '')} | Fuente: {st.session_state.get(f'src_causa_{i}', '')})", style='List Bullet')
 
-        doc.add_paragraph("Asimismo, los efectos principales que este problema genera en el entorno son:")
+        doc.add_paragraph("Efectos principales en el entorno:")
         for i in range(1, 4):
             desc_e = st.session_state.get(f"desc_efecto_{i}", "")
-            evid_e = st.session_state.get(f"evid_efecto_{i}", "")
-            src_e = st.session_state.get(f"src_efecto_{i}", "")
             if desc_e:
-                doc.add_paragraph(f"Efecto {i}: {desc_e}. (Evidencia: {evid_e} | Fuente: {src_e})", style='List Bullet')
+                doc.add_paragraph(f"Efecto {i}: {desc_e}. (Evidencia: {st.session_state.get(f'evid_efecto_{i}', '')} | Fuente: {st.session_state.get(f'src_efecto_{i}', '')})", style='List Bullet')
 
-        # ---------------------------------------------------------
-        # ALCANCE TÉCNICO
-        # ---------------------------------------------------------
-        doc.add_heading('4. Alcance del Proyecto', level=2)
-        doc.add_paragraph("Para mitigar estas causas, se ha delimitado un alcance claro para la solución técnica.")
-        doc.add_paragraph(f"Lo que SÍ abarca el proyecto: {st.session_state.get('si_desc', '')}")
-        doc.add_paragraph(f"Lo que NO abarca el proyecto: {st.session_state.get('no_desc', '')}")
-
-        # ---------------------------------------------------------
-        # DIRECTOR TÉCNICO (AHP Narrativo)
-        # ---------------------------------------------------------
-        doc.add_heading('5. Evaluación Técnica y Matriz AHP', level=2)
+        doc.add_heading('3.1. Alcance Técnico y Storytelling', level=3)
+        doc.add_paragraph(f"El proyecto SÍ abarca: {st.session_state.get('si_desc', '')}. Justificación: {st.session_state.get('si_just', '')}", style='List Bullet')
+        doc.add_paragraph(f"El proyecto NO abarca: {st.session_state.get('no_desc', '')}. Justificación: {st.session_state.get('no_just', '')}", style='List Bullet')
         
-        doc.add_paragraph("Para resolver la problemática planteada, el equipo técnico postuló tres (3) alternativas de proyecto candidatas:")
+        doc.add_paragraph("Guión de Storytelling (Necesidad del Cliente):").bold = True
+        doc.add_paragraph(st.session_state.get('storytelling_txt', ''), style='Intense Quote')
+
+        # ---------------------------------------------------------
+        # DIRECTOR TÉCNICO (AHP e IA)
+        # ---------------------------------------------------------
+        doc.add_heading('4. Evaluación Técnica (AHP) y Auditoría de IA', level=2)
+        
+        doc.add_paragraph("Las alternativas de proyecto evaluadas fueron:")
         doc.add_paragraph(f"Propuesta 1: {st.session_state.get('propuesta_1', '')}", style='List Number')
         doc.add_paragraph(f"Propuesta 2: {st.session_state.get('propuesta_2', '')}", style='List Number')
         doc.add_paragraph(f"Propuesta 3: {st.session_state.get('propuesta_3', '')}", style='List Number')
 
-        doc.add_paragraph(f"La selección definitiva se realizó mediante una matriz multicriterio (AHP), evaluando los siguientes criterios y pesos: {st.session_state.get('criterios_val', '')}")
+        doc.add_paragraph(f"Criterios de Evaluación y Pesos: {st.session_state.get('criterios_val', '')}")
         
-        doc.add_paragraph("En la Figura 2 se presenta la ejecución del algoritmo de ponderación y el gráfico de resultados procesado en Google Colab.")
-
-        # Inserción de Figura 2
+        doc.add_paragraph("En la Figura 2 se presenta la ejecución del algoritmo AHP.")
         img_colab = st.session_state.get('img_colab')
         if img_colab is not None:
             image_stream2 = io.BytesIO(img_colab.getvalue())
@@ -364,20 +375,56 @@ with tab_general:
             fig2 = doc.add_paragraph("Figura 2. Ejecución y Resultados del Código AHP (Colab).")
             fig2.alignment = 1
             fig2.runs[0].font.italic = True
-        else:
-            doc.add_paragraph("[El equipo no adjuntó la gráfica de resultados de Colab]", style='Intense Quote')
+            
+        link_colab = st.session_state.get('link_colab', '')
+        if link_colab:
+            doc.add_paragraph(f"Enlace al Notebook de Colab: {link_colab}")
 
-        doc.add_heading('5.1 Selección Final y Auditoría de IA', level=3)
-        doc.add_paragraph(f"Proyecto Ganador Seleccionado: {st.session_state.get('opcion_ganadora', '')}")
+        doc.add_heading('4.1 Log de Inteligencia Artificial', level=3)
+        doc.add_paragraph(f"Prompt utilizado: {st.session_state.get('prompt_ia', '')}")
+        doc.add_paragraph(f"Auditoría del Ingeniero: {st.session_state.get('audit_ia', '')}", style='Intense Quote')
+
+        # ---------------------------------------------------------
+        # DIRECTOR FINANCIERO (Data Room y Validación)
+        # ---------------------------------------------------------
+        doc.add_heading('5. Estructura Financiera y Gestión de Datos', level=2)
         
-        doc.add_paragraph("Para la construcción del modelo en Python se utilizó inteligencia artificial. Durante el proceso de auditoría del código generado por la IA, el ingeniero detectó y ajustó lo siguiente:")
-        doc.add_paragraph(f"Auditoría Técnica: {st.session_state.get('audit_ia', '')}", style='Intense Quote')
+        doc.add_paragraph("Para garantizar la trazabilidad de la información, se estructuró un Repositorio / Data Room. (Ver Figura 3).")
+        img_dataroom = st.session_state.get('img_data')
+        if img_dataroom is not None:
+            image_stream3 = io.BytesIO(img_dataroom.getvalue())
+            doc.add_picture(image_stream3, width=Inches(6.0))
+            fig3 = doc.add_paragraph("Figura 3. Estructura del Data Room Financiero y Técnico.")
+            fig3.alignment = 1
+            fig3.runs[0].font.italic = True
+
+        link_repo = st.session_state.get('link_repositorio', '')
+        if link_repo:
+            doc.add_paragraph(f"Enlace al Repositorio (Google Drive/Sheets): {link_repo}")
+
+        doc.add_heading('5.1 Validación de Datos Reales', level=3)
+        
+        table_val = doc.add_table(rows=1, cols=4)
+        table_val.style = 'Table Grid'
+        hv_cells = table_val.rows[0].cells
+        hv_cells[0].text = 'Item de Validación'
+        hv_cells[1].text = '¿Existe?'
+        hv_cells[2].text = 'Evidencia'
+        hv_cells[3].text = 'Fuente'
+
+        val_items = ["Datos de mercado y precios", "Datos técnicos operativos", "Estructura de Costos", "Funcionamiento Matriz"]
+        for item in val_items:
+            rv_cells = table_val.add_row().cells
+            rv_cells[0].text = item
+            rv_cells[1].text = st.session_state.get(f"ex_{item}", "")
+            rv_cells[2].text = st.session_state.get(f"ev_{item}", "")
+            rv_cells[3].text = st.session_state.get(f"fu_{item}", "")
 
         # Descarga final
         bio = io.BytesIO()
         doc.save(bio)
         
-        st.success("¡Bitácora generada con éxito en formato de informe técnico!")
+        st.success("¡Bitácora generada con éxito en formato de informe técnico completo!")
         st.download_button(
             label="📄 Descargar Informe Técnico (.docx)",
             data=bio.getvalue(),
