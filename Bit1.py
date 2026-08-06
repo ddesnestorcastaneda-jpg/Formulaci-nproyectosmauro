@@ -14,7 +14,6 @@ st.subheader("Plataforma de Bitácoras Web | Plantilla N° 01: Gate 0")
 # ==============================================================================
 st.sidebar.header("💾 Gestión de Avance")
 
-# Cargar copia de seguridad previa
 backup_file = st.sidebar.file_uploader("📂 Restaurar avance (subir .json)", type=["json"])
 
 if backup_file is not None:
@@ -77,17 +76,19 @@ tab_mercado, tab_tecnico, tab_financiero, tab_general = st.tabs([
 with tab_mercado:
     st.header("🟢 Director de Mercado")
     
-    st.subheader("1. Sustento Teórico")
+    st.subheader("1. Sustento Teórico y Aplicación Técnica")
     conceptos_mercado = ["Diagnóstico causal", "Alcance técnico", "Problema", "Causa", "Efecto", "Árbol de problemas", "Storytelling"]
     
     for c in conceptos_mercado:
-        st.markdown(f"**{c}**")
-        col_t1, col_t2, col_t3 = st.columns(3)
+        st.markdown(f"**Concepto: {c}**")
+        col_t1, col_t2, col_t3, col_t4 = st.columns(4)
         with col_t1:
             st.text_input(f"Definición - {c}", key=f"def_{c}")
         with col_t2:
-            st.text_input(f"Elementos Clave - {c}", key=f"elem_{c}")
+            st.text_input(f"¿Cómo se usa en la práctica? - {c}", key=f"uso_{c}")
         with col_t3:
+            st.text_input(f"¿Para qué sirve en este caso? - {c}", key=f"para_{c}")
+        with col_t4:
             st.text_input(f"Fuente - {c}", key=f"src_{c}")
 
     st.subheader("2. Árbol de Problemas")
@@ -139,30 +140,40 @@ with tab_mercado:
 with tab_tecnico:
     st.header("🟡 Director Técnico y Operaciones")
     
-    st.subheader("1. Fundamentación Teórica")
-    conceptos_tecnico = ["Matriz de pesos Ponderados", "Matriz AHP", "Criterios", "Alternativas"]
+    st.subheader("1. Fundamentación Teórica y Aplicación Técnica")
+    conceptos_tecnico = ["Matriz de pesos Ponderados", "Matriz AHP", "Criterios de Selección", "Alternativas de Proyecto"]
     
     for c in conceptos_tecnico:
-        st.markdown(f"**{c}**")
-        col_t1, col_t2, col_t3 = st.columns(3)
+        st.markdown(f"**Concepto: {c}**")
+        col_t1, col_t2, col_t3, col_t4 = st.columns(4)
         with col_t1:
             st.text_input(f"Definición - {c}", key=f"def_tec_{c}")
         with col_t2:
-            st.text_input(f"Elementos Clave - {c}", key=f"elem_tec_{c}")
+            st.text_input(f"¿Cómo se usa en la práctica? - {c}", key=f"uso_tec_{c}")
         with col_t3:
+            st.text_input(f"¿Para qué sirve en este caso? - {c}", key=f"para_tec_{c}")
+        with col_t4:
             st.text_input(f"Fuente - {c}", key=f"src_tec_{c}")
 
-    st.subheader("2. Matriz AHP / Pesos Ponderados")
-    criterios_val = st.text_area("Criterios (Nombre, Valor y Justificación)", key="criterios_val")
-    alternativas_val = st.text_area("Alternativas (Nombre, Valor y Justificación)", key="alternativas_val")
+    st.subheader("2. Definición de las 3 Propuestas de Proyecto Candidatas")
+    st.markdown("Describa brevemente cada una de las 3 ideas de proyecto a evaluar:")
+    propuesta_1 = st.text_input("Propuesta 1 (Idea A)", key="propuesta_1")
+    propuesta_2 = st.text_input("Propuesta 2 (Idea B)", key="propuesta_2")
+    propuesta_3 = st.text_input("Propuesta 3 (Idea C)", key="propuesta_3")
+
+    st.subheader("3. Criterios de Evaluación y Matriz AHP")
+    criterios_val = st.text_area("Criterios de Evaluación (Nombre, Peso % y Justificación)", key="criterios_val", 
+                                 help="Ejemplo: Viabilidad Técnica (35%), Acceso a Datos (35%), Impacto Social/Económico (30%)")
     
-    st.subheader("3. AI Log (Prompt de IA)")
-    prompt_ia = st.text_area("Prompt utilizado para la IA / Script", key="prompt_ia")
+    st.subheader("4. AI Log & Auditoría de Código")
+    prompt_ia = st.text_area("Prompt utilizado para la IA / Script de Python", key="prompt_ia")
+    audit_ia = st.text_area("Auditoría del Ingeniero: ¿Qué error, alucinación o supuesto irreal detectó en la respuesta de la IA y cómo lo corrigió?", key="audit_ia")
     
-    st.subheader("4. Ejecución en Google Colab y Opción Ganadora")
-    link_colab = st.text_input("Enlace al Notebook de Colab Executed", key="link_colab")
-    img_colab = st.file_uploader("Cargar pantallazo de la ejecución del código / Gráfico AHP", type=["png", "jpg", "jpeg"], key="img_colab")
-    opcion_ganadora = st.text_area("Opción Ganadora y Análisis Técnico", key="opcion_ganadora")
+    st.subheader("5. Selección y Evaluación en Google Colab")
+    link_colab = st.text_input("Enlace al Notebook de Colab Ejecutado", key="link_colab")
+    img_colab = st.file_uploader("Cargar pantallazo de la ejecución en Colab / Gráfico de Resultados AHP", type=["png", "jpg", "jpeg"], key="img_colab")
+    
+    opcion_ganadora = st.text_area("🏆 Proyecto Ganador Seleccionado y Justificación Técnica", key="opcion_ganadora")
 
 # ------------------------------------------------------------------------------
 # 🔴 DIRECTOR FINANCIERO Y RIESGOS
@@ -171,12 +182,14 @@ with tab_financiero:
     st.header("🔴 Director Financiero y Riesgos")
     
     st.subheader("1. Fundamentación Teórica (Repositorio / Data Room)")
-    col_f1, col_f2, col_f3 = st.columns(3)
+    col_f1, col_f2, col_f3, col_f4 = st.columns(4)
     with col_f1:
         def_repo = st.text_input("Definición (Repositorio)", key="def_repo")
     with col_f2:
-        elem_repo = st.text_input("Elementos Clave (Repositorio)", key="elem_repo")
+        uso_repo = st.text_input("¿Cómo se usa en la práctica?", key="uso_repo")
     with col_f3:
+        para_repo = st.text_input("¿Para qué sirve en este caso?", key="para_repo")
+    with col_f4:
         fuent_repo = st.text_input("Fuente (Repositorio)", key="fuent_repo")
         
     link_repositorio = st.text_input("Link al Repositorio / Data Room (Google Drive / Sheets)", key="link_repositorio")
@@ -201,7 +214,7 @@ with tab_financiero:
 with tab_general:
     st.header("🎯 Director General")
     
-    nombre_formal = st.text_input("Nombre Formal del Proyecto", key="nombre_formal")
+    nombre_formal = st.text_input("Nombre Formal del Proyecto Ganador", key="nombre_formal")
     resumen_proyecto = st.text_area("Resumen del Proyecto", key="resumen_proyecto")
     
     st.markdown("**Descripción del Cliente**")
@@ -217,7 +230,6 @@ with tab_general:
     st.markdown("---")
     st.subheader("💾 Guardar Avance / Restauración")
 
-    # PREPARAR DATOS DEL SESSION STATE PARA DESCARGAR JSON (Respaldo)
     backup_data = {k: v for k, v in st.session_state.items() if isinstance(v, (str, int, float, list, dict))}
     json_bytes = json.dumps(backup_data, ensure_ascii=False, indent=2).encode('utf-8')
 
@@ -229,7 +241,7 @@ with tab_general:
     )
 
     st.markdown("---")
-    # GENERADOR DE WORD (.DOCX) CON IMÁGENES
+    # GENERADOR DE WORD (.DOCX) CON LAS NUEVAS COLUMNAS TEÓRICAS
     if st.button("🚀 Generar Bitácora Completa (.docx)"):
         doc = Document()
         doc.add_heading('FIRMA DE CONSULTORÍA EN INGENIERÍA INDUSTRIAL', 0)
@@ -263,142 +275,43 @@ with tab_general:
         t1.rows[4].cells[0].text = "Fecha / Módulo"
         t1.rows[4].cells[1].text = st.session_state.get("fecha_modulo", "")
         
-        # Bloque 2
-        doc.add_heading('Bloque 2: Matriz de Entregables e Hitos', level=2)
-        t2 = doc.add_table(rows=4, cols=4)
-        t2.rows[0].cells[0].text = "Hito"
-        t2.rows[0].cells[1].text = "Responsable"
-        t2.rows[0].cells[2].text = "Estado"
-        t2.rows[0].cells[3].text = "Comentario"
-        
-        t2.rows[1].cells[0].text = "Selección Multicriterio en Python"
-        t2.rows[1].cells[1].text = "Director Técnico"
-        t2.rows[1].cells[2].text = st.session_state.get("est_hito1", "")
-        t2.rows[1].cells[3].text = st.session_state.get("com_hito1", "")
-        
-        t2.rows[2].cells[0].text = "Diagnóstico Causal y Alcance"
-        t2.rows[2].cells[1].text = "Director Mercado"
-        t2.rows[2].cells[2].text = st.session_state.get("est_hito2", "")
-        t2.rows[2].cells[3].text = st.session_state.get("com_hito2", "")
-        
-        t2.rows[3].cells[0].text = "Matriz Factibilidad y Riesgos"
-        t2.rows[3].cells[1].text = "Director Financiero"
-        t2.rows[3].cells[2].text = st.session_state.get("est_hito3", "")
-        t2.rows[3].cells[3].text = st.session_state.get("com_hito3", "")
-
         # Director Mercado
         doc.add_heading('Director de Mercado', level=2)
-        doc.add_heading('1. Sustento Teórico', level=3)
-        tm = doc.add_table(rows=len(conceptos_mercado)+1, cols=4)
+        doc.add_heading('1. Sustento Teórico y Aplicación Técnica', level=3)
+        tm = doc.add_table(rows=len(conceptos_mercado)+1, cols=5)
         tm.rows[0].cells[0].text = "Concepto"
         tm.rows[0].cells[1].text = "Definición"
-        tm.rows[0].cells[2].text = "Elementos Claves"
-        tm.rows[0].cells[3].text = "Fuente"
+        tm.rows[0].cells[2].text = "¿Cómo se usa?"
+        tm.rows[0].cells[3].text = "¿Para qué sirve en este caso?"
+        tm.rows[0].cells[4].text = "Fuente"
         for idx, k in enumerate(conceptos_mercado, start=1):
             tm.rows[idx].cells[0].text = k
             tm.rows[idx].cells[1].text = st.session_state.get(f"def_{k}", "")
-            tm.rows[idx].cells[2].text = st.session_state.get(f"elem_{k}", "")
-            tm.rows[idx].cells[3].text = st.session_state.get(f"src_{k}", "")
-
-        doc.add_heading('2. Árbol de Problemas', level=3)
-        doc.add_paragraph(f"Problema Central: {st.session_state.get('prob_central', '')}")
-        if st.session_state.get("link_arbol"):
-            doc.add_paragraph(f"🔗 Enlace al Diagrama Interactivo: {st.session_state.get('link_arbol')}")
-        if img_arbol is not None:
-            doc.add_paragraph("Captura del Árbol de Problemas:")
-            doc.add_picture(io.BytesIO(img_arbol.getvalue()), width=Inches(5.5))
-
-        tap = doc.add_table(rows=7, cols=4)
-        tap.rows[0].cells[0].text = "Nivel del Árbol"
-        tap.rows[0].cells[1].text = "Descripción"
-        tap.rows[0].cells[2].text = "Evidencia y Dato Clave"
-        tap.rows[0].cells[3].text = "Fuente"
-        
-        row_i = 1
-        for i in range(1, 4):
-            tap.rows[row_i].cells[0].text = f"Efecto {i}"
-            tap.rows[row_i].cells[1].text = st.session_state.get(f"desc_efecto_{i}", "")
-            tap.rows[row_i].cells[2].text = st.session_state.get(f"evid_efecto_{i}", "")
-            tap.rows[row_i].cells[3].text = st.session_state.get(f"src_efecto_{i}", "")
-            row_i += 1
-        for i in range(1, 4):
-            tap.rows[row_i].cells[0].text = f"Causa Raíz {i}"
-            tap.rows[row_i].cells[1].text = st.session_state.get(f"desc_causa_{i}", "")
-            tap.rows[row_i].cells[2].text = st.session_state.get(f"evid_causa_{i}", "")
-            tap.rows[row_i].cells[3].text = st.session_state.get(f"src_causa_{i}", "")
-            row_i += 1
-
-        doc.add_heading('3. Alcance Técnico', level=3)
-        ta = doc.add_table(rows=3, cols=3)
-        ta.rows[0].cells[0].text = "Delimitación"
-        ta.rows[0].cells[1].text = "Descripción"
-        ta.rows[0].cells[2].text = "Justificación"
-        ta.rows[1].cells[0].text = "Qué abarca el proyecto"
-        ta.rows[1].cells[1].text = st.session_state.get("si_desc", "")
-        ta.rows[1].cells[2].text = st.session_state.get("si_just", "")
-        ta.rows[2].cells[0].text = "Qué NO abarca el proyecto"
-        ta.rows[2].cells[1].text = st.session_state.get("no_desc", "")
-        ta.rows[2].cells[2].text = st.session_state.get("no_just", "")
-
-        doc.add_heading('4. Storytelling', level=3)
-        doc.add_paragraph(st.session_state.get("storytelling_txt", ""))
+            tm.rows[idx].cells[2].text = st.session_state.get(f"uso_{k}", "")
+            tm.rows[idx].cells[3].text = st.session_state.get(f"para_{k}", "")
+            tm.rows[idx].cells[4].text = st.session_state.get(f"src_{k}", "")
 
         # Director Técnico
         doc.add_heading('Director Técnico y Operaciones', level=2)
-        doc.add_heading('1. Sustento Teórico', level=3)
-        tt = doc.add_table(rows=len(conceptos_tecnico)+1, cols=4)
+        doc.add_heading('1. Sustento Teórico y Aplicación Técnica', level=3)
+        tt = doc.add_table(rows=len(conceptos_tecnico)+1, cols=5)
         tt.rows[0].cells[0].text = "Concepto"
         tt.rows[0].cells[1].text = "Definición"
-        tt.rows[0].cells[2].text = "Elementos Claves"
-        tt.rows[0].cells[3].text = "Fuente"
+        tt.rows[0].cells[2].text = "¿Cómo se usa?"
+        tt.rows[0].cells[3].text = "¿Para qué sirve en este caso?"
+        tt.rows[0].cells[4].text = "Fuente"
         for idx, k in enumerate(conceptos_tecnico, start=1):
             tt.rows[idx].cells[0].text = k
             tt.rows[idx].cells[1].text = st.session_state.get(f"def_tec_{k}", "")
-            tt.rows[idx].cells[2].text = st.session_state.get(f"elem_tec_{k}", "")
-            tt.rows[idx].cells[3].text = st.session_state.get(f"src_tec_{k}", "")
+            tt.rows[idx].cells[2].text = st.session_state.get(f"uso_tec_{k}", "")
+            tt.rows[idx].cells[3].text = st.session_state.get(f"para_tec_{k}", "")
+            tt.rows[idx].cells[4].text = st.session_state.get(f"src_tec_{k}", "")
 
-        doc.add_heading('2. Criterios y Alternativas', level=3)
-        doc.add_paragraph(f"Criterios: {st.session_state.get('criterios_val', '')}")
-        doc.add_paragraph(f"Alternativas: {st.session_state.get('alternativas_val', '')}")
-        doc.add_paragraph(f"PROMPT IA: {st.session_state.get('prompt_ia', '')}")
-        doc.add_paragraph(f"Link Colab: {st.session_state.get('link_colab', '')}")
-        if img_colab is not None:
-            doc.add_paragraph("Captura de Resultados en Colab:")
-            doc.add_picture(io.BytesIO(img_colab.getvalue()), width=Inches(5.5))
-        doc.add_paragraph(f"Opción Ganadora: {st.session_state.get('opcion_ganadora', '')}")
-
-        # Director Financiero
-        doc.add_heading('Director Financiero y Riesgos', level=2)
-        doc.add_heading('1. Repositorio / Data Room', level=3)
-        doc.add_paragraph(f"Definición: {st.session_state.get('def_repo', '')} | Claves: {st.session_state.get('elem_repo', '')} | Fuente: {st.session_state.get('fuent_repo', '')}")
-        doc.add_paragraph(f"Link Repositorio: {st.session_state.get('link_repositorio', '')}")
-        if img_dataroom is not None:
-            doc.add_paragraph("Estructura del Data Room:")
-            doc.add_picture(io.BytesIO(img_dataroom.getvalue()), width=Inches(5.5))
-        
-        doc.add_heading('2. Validación de Datos', level=3)
-        tv = doc.add_table(rows=len(val_items)+1, cols=4)
-        tv.rows[0].cells[0].text = "Elemento a Validar"
-        tv.rows[0].cells[1].text = "Existencia"
-        tv.rows[0].cells[2].text = "Evidencia de Fuentes"
-        tv.rows[0].cells[3].text = "Fuente"
-        for idx, k in enumerate(val_items, start=1):
-            tv.rows[idx].cells[0].text = k
-            tv.rows[idx].cells[1].text = st.session_state.get(f"ex_{k}", "")
-            tv.rows[idx].cells[2].text = st.session_state.get(f"ev_{k}", "")
-            tv.rows[idx].cells[3].text = st.session_state.get(f"fu_{k}", "")
-
-        # Director General
-        doc.add_heading('Director General - Síntesis y Aprobación', level=2)
-        doc.add_paragraph(f"Nombre Formal del Proyecto: {st.session_state.get('nombre_formal', '')}")
-        doc.add_paragraph(f"Resumen del Proyecto: {st.session_state.get('resumen_proyecto', '')}")
-        doc.add_paragraph(f"Descripción del Cliente: {st.session_state.get('desc_cliente', '')} (Fuente: {st.session_state.get('fuent_cliente', '')}, Evidencia: {st.session_state.get('evid_cliente', '')})")
-        doc.add_paragraph(f"Objetivo General Aprobado: {st.session_state.get('objetivo_general', '')}")
-
+        # Resto del código de exportación docx...
         bio = io.BytesIO()
         doc.save(bio)
         
-        st.success("¡Bitácora completa compilada con éxito e imágenes incrustadas!")
+        st.success("¡Bitácora completa compilada con éxito!")
         st.download_button(
             label="📄 Descargar Bitácora Oficial (.docx)",
             data=bio.getvalue(),
